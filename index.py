@@ -23,21 +23,28 @@ async def on_message(message):
     await client.process_commands(message)
 
 @client.command()
-async def add(user : discord.Member, *roles: discord.Role):
-    await client.say("oi")
-    return
+async def add(user : discord.Member, *rolesParameter : str):
+    # Defini uma lista com os objetos "discord.roles" e verifica suas condições:
+    roles = []
+    for r in rolesParameter:
+        utils_get = discord.utils.get(user.server.roles, name=r)
+        if utils_get is None:
+            await client.say('The role " **%s** " does not exist.'%(r))
+        elif utils_get in user.roles:
+            await client.say('The user **%s** already has the role **%s**.'%(user.name,r))
+        else:
+            roles.append(utils_get)
+    
+    # Adiciona as roles ao user, caso possível:
     str_roles = [a.name for a in roles]
-    for r in roles:
-        if r not in user.server.roles:
-            await client.say("This role %s do not exist."%(r.name))
     try:
         await client.add_roles(user, *roles)
         if len(str_roles) == 1:
-            await client.say("Now, <@%s> has the role %s!"%(user.id, str_roles[0]))
+            await client.say("Now, <@%s> has the role **%s**!"%(user.id, str_roles[0]))
         elif len(str_roles) == 2:
-            await client.say("Now, <@%s> has the role %s and %s!"%(user.id, str_roles[0],str_roles[1]))
+            await client.say("Now, <@%s> has the role **%s** and **%s**!"%(user.id, str_roles[0],str_roles[1]))
         elif len(str_roles) > 2:
-            await client.say("Now, <@%s> has the role %s, %s and %s!"%(user.id, str_roles[0], ", ".join(str_roles[1:-1]), str_roles[-1]))
+            await client.say("Now, <@%s> has the role **%s**, **%s** and **%s**!"%(user.id, str_roles[0], ", ".join(str_roles[1:-1]), str_roles[-1]))
     except Exception:
         await client.say("You do not have permission")
         return
