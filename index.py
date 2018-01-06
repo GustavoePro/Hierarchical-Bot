@@ -22,9 +22,15 @@ async def on_message(message):
         await client.send_message(message.channel, "%s" %(" ".join(args[1:])))
     await client.process_commands(message)
 
-@client.command()
-async def add(user : discord.Member, *rolesParameter : str):
-    # Defini uma lista com os objetos "discord.roles" e verifica suas condições:
+@client.command(pass_context=True)
+async def add(ctx, userParameter : str, *rolesParameter : str):
+    # Defini um objeto "discord.members"(user) e verifica sua existência:
+    user = discord.utils.get(ctx.message.server.members, name=userParameter)
+    if user is None:
+        await client.say('The user " **%s** " does not exist'%(userParameter))
+        return
+    
+    # Defini uma lista com os objetos "discord.roles"(roles) e verifica suas condições:
     roles = []
     for r in rolesParameter:
         utils_get = discord.utils.get(user.server.roles, name=r)
