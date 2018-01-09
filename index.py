@@ -1,13 +1,19 @@
 import discord
-from discord.ext.commands import Bot
 from discord.ext import commands
 import asyncio
 import time
 import random
+from discord.ext.commands import errors
+import sys
+
+
+description = '''lol'''
 
 Client = discord.Client()
 client = commands.Bot(command_prefix = "!")
+initial_extensions = ["cogs.exec"]
 
+        
 @client.event
 async def on_ready():
     print("Bot is ready!")
@@ -22,37 +28,26 @@ async def on_message(message):
         await client.send_message(message.channel, "%s" %(" ".join(args[1:])))
     await client.process_commands(message)
 
-@client.command(pass_context=True)
-async def add(ctx, userParameter : str, *rolesParameter : str):
-    # Defini um objeto "discord.members"(user) e verifica sua existência:
-    user = discord.utils.get(ctx.message.server.members, name=userParameter)
-    if user is None:
-        await client.say('The user " **%s** " does not exist'%(userParameter))
-        return
-    
-    # Defini uma lista com os objetos "discord.roles"(roles) e verifica suas condições:
-    roles = []
-    for r in rolesParameter:
-        utils_get = discord.utils.get(user.server.roles, name=r)
-        if utils_get is None:
-            await client.say('The role " **%s** " does not exist.'%(r))
-        elif utils_get in user.roles:
-            await client.say('The user **%s** already has the role **%s**.'%(user.name,r))
-        else:
-            roles.append(utils_get)
-    
-    # Adiciona as roles ao user, caso possível:
-    str_roles = [a.name for a in roles]
-    try:
-        await client.add_roles(user, *roles)
-        if len(str_roles) == 1:
-            await client.say("Now, <@%s> has the role **%s**!"%(user.id, str_roles[0]))
-        elif len(str_roles) == 2:
-            await client.say("Now, <@%s> has the role **%s** and **%s**!"%(user.id, str_roles[0],str_roles[1]))
-        elif len(str_roles) > 2:
-            await client.say("Now, <@%s> has the role **%s**, **%s** and **%s**!"%(user.id, str_roles[0], ", ".join(str_roles[1:-1]), str_roles[-1]))
-    except Exception:
-        await client.say("You do not have permission")
-        return
 
-client.run("Mzk2NzU4MTMzMjE4NzM4MTc3.DSq7ug.NzE4Il1OJwUevjRRYTsPeoS7sQE")
+@client.command(pass_context=True)
+async def role_stats(ctx, role_name : str):
+    # Comando ainda em teste
+    role = discord.utils.get(ctx.message.server.roles, name=role_name)
+    embed=discord.Embed(title="Role: %s"%(role.name), description="Desc", colour=int("0x0066ff", 16))
+    embed.add_field(name="Fiel1", value="hi", inline=False)
+    embed.add_field(name="Field2", value="hi2", inline=False)
+    await client.say(embed=embed)
+    role.permissions.kick_members = True
+    await client.edit_role(ctx.message.server, role, permissions = role.permissions)
+    await client.say(role.permissions.kick_members)
+
+if __name__ == "__main__":
+    for extension in initial_extensions:
+        try:
+            client.load_extension(extension)
+            print('Extension {} loaded.'.format(extension))
+        except Exception as e:
+            exc = '{}: {}'.format(type(e).__name__, e)
+            print('Failed to load extension {}\n{}'.format(extension, exc))
+    
+    client.run("Mzk2NzU4MTMzMjE4NzM4MTc3.DSq7ug.NzE4Il1OJwUevjRRYTsPeoS7sQE")
