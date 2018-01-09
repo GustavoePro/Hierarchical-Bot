@@ -12,9 +12,8 @@ import sys
 
 description = '''lol'''
 
-Client = discord.Client()
 client = commands.Bot(command_prefix = "!")
-initial_extensions = ["cogs.exec"]
+initial_extensions = ["cogs.roles", "cogs.user"]
 
         
 @client.event
@@ -52,5 +51,5 @@ if __name__ == "__main__":
         except Exception as e:
             exc = '{}: {}'.format(type(e).__name__, e)
             print('Failed to load extension {}\n{}'.format(extension, exc))
-    
-    client.run("Mzk2NzU4MTMzMjE4NzM4MTc3.DSq7ug.NzE4Il1OJwUevjRRYTsPeoS7sQE")
+
+    client.run("token")
