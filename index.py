@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import discord
 from discord.ext import commands
 import asyncio
@@ -49,5 +52,4 @@ if __name__ == "__main__":
             exc = '{}: {}'.format(type(e).__name__, e)
             print('Failed to load extension {}\n{}'.format(extension, exc))
     
-    client.run("Mzk2NzU4MTMzMjE4NzM4MTc3.DSq7ug.NzE4Il1OJwUevjRRYTsPeoS7sQE")
-    client.run("token")
+    client.run("Mzk2NzU4MTMzMjE4NzM4MTc3.DTeg2A._F0tpAio_RLulkk5n5ZcASU9Xrc")
