@@ -9,9 +9,6 @@ import random
 from discord.ext.commands import errors
 import sys
 
-
-description = '''lol'''
-
 client = commands.Bot(command_prefix = "!")
 initial_extensions = ["cogs.roles", "cogs.user"]
 
